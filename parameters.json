@@ -1,0 +1,42 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "EnvironmentName": {
+            "value": [
+                "dev",
+                "prod"
+            ]
+        },
+        "DEV-VM-adminUsername": {
+            "value": "devAdminUser"
+        },
+        "PROD-VM-adminUsername": {
+            "value": "prodAdminUser"
+        },
+        "DEV-VM-adminPassword": {
+            "value": "dev!AdminPW1"
+        },
+        "PROD-VM-adminPassword": {
+            "value": "prod!AdminPW1"
+        },
+        "DEV-dnsNameForPublicIP": {
+            "value": "project-dev"
+        },
+        "PROD-dnsNameForPublicIP": {
+            "value": "project-prod"
+        },
+        "DEV-SQL-adminUsername": {
+            "value": "devSqlAdmin"
+        },
+        "PROD-SQL-adminUsername": {
+            "value": "prodSqlAdmin"
+        },
+        "DEV-SQL-adminPassword": {
+            "value": "dev!SqlPassword1"
+        },
+        "PROD-SQL-adminPassword": {
+            "value": "prod!SqlPassword1"
+        }
+    }
+}
