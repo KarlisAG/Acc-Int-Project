@@ -1,13 +1,14 @@
 #Requires -Version 3.0
 
 Param(
-    [string] $ResourceGroupLocation = "northeurope",
-    [string] $ResourceGroupName = 'ProjectARM',
+    [string] $Environment,
+    [string] $ResourceGroupLocation,
+    [string] $ResourceGroupName,
     [switch] $UploadArtifacts,
     [string] $StorageAccountName,
-    [string] $StorageContainerName = $ResourceGroupName.ToLowerInvariant() + '-stageartifacts',
+    [string] $StorageContainerName = 'stageartifacts',
     [string] $TemplateFile = 'main.json',
-    [string] $TemplateParametersFile = 'parameters.json',
+    [string] $TemplateParametersFile,
     [string] $ArtifactStagingDirectory = '.',
     [string] $DSCSourceFolder = 'linked/DSC',
     [switch] $ValidateOnly
@@ -43,9 +44,12 @@ if ($UploadArtifacts) {
     $ArtifactsLocationName = '_artifactsLocation'
     $ArtifactsLocationSasTokenName = '_artifactsLocationSasToken'
     $storageKey = 'storageKey'
+    $EnvironmentName = 'EnvironmentName'
     $OptionalParameters[$ArtifactsLocationName] = $JsonParameters | Select -Expand $ArtifactsLocationName -ErrorAction Ignore | Select -Expand 'value' -ErrorAction Ignore
     $OptionalParameters[$ArtifactsLocationSasTokenName] = $JsonParameters | Select -Expand $ArtifactsLocationSasTokenName -ErrorAction Ignore | Select -Expand 'value' -ErrorAction Ignore
     $OptionalParameters[$storageKey] = $JsonParameters | Select -Expand $storageKey -ErrorAction Ignore | Select -Expand 'value' -ErrorAction Ignore
+    $OptionalParameters[$EnvironmentName] = $JsonParameters | Select -Expand $EnvironmentName -ErrorAction Ignore | Select -Expand 'value' -ErrorAction Ignore
+    $OptionalParameters[$EnvironmentName] = $Environment
     # Create DSC configuration archive
     if (Test-Path $DSCSourceFolder) {
         $DSCSourceFilePaths = @(Get-ChildItem $DSCSourceFolder -File -Filter '*.ps1' | ForEach-Object -Process {$_.FullName})
@@ -65,8 +69,8 @@ if ($UploadArtifacts) {
     # Create the storage account if it doesn't already exist
     if ($StorageAccount -eq $null) {
         $StorageResourceGroupName = 'ARM_Deploy_Staging'
-        New-AzureRmResourceGroup -Location "$ResourceGroupLocation" -Name $StorageResourceGroupName -Force
-        $StorageAccount = New-AzureRmStorageAccount -StorageAccountName $StorageAccountName -Type 'Standard_LRS' -ResourceGroupName $StorageResourceGroupName -Location "$ResourceGroupLocation"
+        New-AzureRmResourceGroup -Location "northeurope" -Name $StorageResourceGroupName -Force
+        $StorageAccount = New-AzureRmStorageAccount -StorageAccountName $StorageAccountName -Type 'Standard_LRS' -ResourceGroupName $StorageResourceGroupName -Location "northeurope"
     }
 
     # Generate the value for artifacts location if it is not provided in the parameter file

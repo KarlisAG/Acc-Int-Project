@@ -1,0 +1,21 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "VM-adminUsername": {
+            "value": "devAdminUser"
+        },
+        "VM-adminPassword": {
+            "value": "dev!AdminPW1"
+        },
+        "dnsNameForPublicIP": {
+            "value": "project-dev"
+        },
+        "SQL-adminUsername": {
+            "value": "devSqlAdmin"
+        },
+        "SQL-adminPassword": {
+            "value": "dev!SqlPassword1"
+        }
+    }
+}

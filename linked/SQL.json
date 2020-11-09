@@ -156,9 +156,9 @@
         "endIp": "[parameters('VM-IP-Address')]"
       },
       {
-        "startIp": "65.52.224.104",
-        "endIp": "65.52.224.104"
-      }
+        "startIp": "65.52.129.125",
+        "endIp": "65.52.129.125"
+      }//65.52.129.125 - vel custom ip - no kurienes tie nak????65.52.224.104 - tas bija 1maja reize
     ]
   },
   "resources": [

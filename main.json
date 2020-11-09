@@ -3,9 +3,7 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "EnvironmentName": {
-            "type": "array",
-            "minLength": 2,
-            "maxLength": 2,
+            "type": "string",
             "metadata": {
                 "description": "The environment (type) name."
             }
@@ -28,67 +26,34 @@
                 "description": "Storage key, used to access .bacpac files"
             }
         },
-        "DEV-VM-adminUsername": {
+        "VM-adminUsername": {
             "type": "string",
             "minLength": 1,
             "metadata": {
                 "description": "Username for the DEV Virtual Machine."
             }
         },
-        "PROD-VM-adminUsername": {
-            "type": "string",
-            "minLength": 1,
-            "metadata": {
-                "description": "Username for the PROD Virtual Machine."
-            }
-        },
-        "DEV-VM-adminPassword": {
+        "VM-adminPassword": {
             "type": "securestring",
             "metadata": {
                 "description": "Password for the DEV Virtual Machine."
             }
         },
-        "PROD-VM-adminPassword": {
-            "type": "securestring",
-            "metadata": {
-                "description": "Password for the PROD Virtual Machine."
-            }
-        },
-        "DEV-dnsNameForPublicIP": {
+        "dnsNameForPublicIP": {
             "type": "string",
             "minLength": 1,
             "metadata": {
                 "description": "Globally unique DNS Name for the Public IP used to access the Virtual Machine."
             }
         },
-        "PROD-dnsNameForPublicIP": {
-            "type": "string",
-            "minLength": 1,
-            "metadata": {
-                "description": "Globally unique DNS Name for the Public IP used to access the Virtual Machine."
-            }
-        },
-        "DEV-SQL-adminUsername": {
+        "SQL-adminUsername": {
             "type": "string",
             "minLength": 1,
             "metadata": {
                 "description": "Username for the SQL server admin."
             }
         },
-        "PROD-SQL-adminUsername": {
-            "type": "string",
-            "minLength": 1,
-            "metadata": {
-                "description": "Username for the SQL server admin."
-            }
-        },
-        "DEV-SQL-adminPassword": {
-            "type": "securestring",
-            "metadata": {
-                "description": "The SQL Server administrator login password."
-            }
-        },
-        "PROD-SQL-adminPassword": {
+        "SQL-adminPassword": {
             "type": "securestring",
             "metadata": {
                 "description": "The SQL Server administrator login password."
@@ -97,30 +62,10 @@
     },
     "variables": {
         "TemplateLink": "[concat(parameters('_artifactsLocation'), '/linked/WindowsVirtualMachine.json', parameters('_artifactsLocationSasToken'))]",
-        "VM-Usernames": [
-            "[parameters('DEV-VM-adminUsername')]",
-            "[parameters('PROD-VM-adminUsername')]"
-        ],
-        "VM-Passwords": [
-            "[parameters('DEV-VM-adminPassword')]",
-            "[parameters('PROD-VM-adminPassword')]"
-        ],
-        "VM-DNS-Names": [
-            "[parameters('DEV-dnsNameForPublicIP')]",
-            "[parameters('PROD-dnsNameForPublicIP')]"
-        ],
-        "SQL-Usernames": [
-            "[parameters('DEV-SQL-adminUsername')]",
-            "[parameters('PROD-SQL-adminUsername')]"
-        ],
-        "SQL-Passwords": [
-            "[parameters('DEV-SQL-adminPassword')]",
-            "[parameters('PROD-SQL-adminPassword')]"
-        ]
     },
     "resources": [
         {
-            "name": "[concat(parameters('EnvironmentName')[copyIndex()], '-VM')]",
+            "name": "[concat(parameters('EnvironmentName'), '-VM')]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2019-10-01",
             "properties": {
@@ -131,7 +76,7 @@
                 },
                 "parameters": {
                     "EnvironmentName": {
-                        "value": "[parameters('EnvironmentName')[copyIndex()]]"
+                        "value": "[parameters('EnvironmentName')]"
                     },
                     "_artifactsLocation": {
                         "value": "[parameters('_artifactsLocation')]"
@@ -140,28 +85,24 @@
                         "value": "[parameters('_artifactsLocationSasToken')]"
                     },
                     "VM-AdminUsername": {
-                        "value": "[variables('VM-Usernames')[copyIndex()]]"
+                        "value": "[parameters('VM-adminUsername')]"
                     },
                     "VM-AdminPassword": {
-                        "value": "[variables('VM-Passwords')[copyIndex()]]"
+                        "value": "[parameters('VM-adminPassword')]"
                     },
                     "dnsNameForPublicIP": {
-                        "value": "[variables('VM-DNS-Names')[copyIndex()]]"
+                        "value": "[parameters('dnsNameForPublicIP')]"
                     },
                     "SQL-AdminUsername": {
-                        "value": "[variables('SQL-Usernames')[copyIndex()]]"
+                        "value": "[parameters('SQL-adminUsername')]"
                     },
                     "SQL-AdminPassword": {
-                        "value": "[variables('SQL-Passwords')[copyIndex()]]"
+                        "value": "[parameters('SQL-adminPassword')]"
                     },
                     "storageKey": {
                         "value": "[parameters('storageKey')]"
                     }
                 }
-            },
-            "copy": {
-                "name": "Copying environment deployment resources",
-                "count": "[length(parameters('EnvironmentName'))]"
             }
         }
     ],
